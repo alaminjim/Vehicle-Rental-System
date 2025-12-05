@@ -3,7 +3,7 @@ import { signUpController } from "./signup.controller";
 
 const route = express.Router();
 
-route.post("/signup", signUpController.createSignUp);
+route.post("/", signUpController.createSignUp);
 
 export const signUpRoute = {
   route,

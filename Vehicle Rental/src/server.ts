@@ -2,20 +2,26 @@ import express from "express";
 import config from "./config";
 import { initDB } from "./config/db";
 
-import { signinRoute } from "./auth/signin/signin.route";
-import { signUpRoute } from "./auth/signup/signup.route";
+import { signUpRoute } from "./modules/auth/signup/signup.route";
+import { signinRoute } from "./modules/auth/signin/signin.route";
+import { vehiclesRoute } from "./modules/vehicles/vehicles.route";
 
 const app = express();
 const port = config.port;
 
 app.use(express.json());
 
+initDB();
+
 //auth
 
-app.use("/api/v1/auth", signUpRoute.route);
-app.use("/api/v1/auth", signinRoute.route);
+app.use("/api/v1/auth/signup", signUpRoute.route);
+app.use("/api/v1/auth/signin", signinRoute.route);
+
+// vehicles
+
+app.use("/api/v1/vehicles", vehiclesRoute.routes);
 
 app.listen(port, async () => {
-  await initDB();
   console.log(`server is running port on ---> ${port}`);
 });

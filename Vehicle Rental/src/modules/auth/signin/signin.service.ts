@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
-import { pool } from "../../config/db";
+
 import jwt from "jsonwebtoken";
-import config from "../../config";
+import { pool } from "../../../config/db";
+import config from "../../../config";
 
 const signinUser = async (email: string, password: string) => {
   const result = await pool.query(`SELECT * FROM Users WHERE email=$1`, [
