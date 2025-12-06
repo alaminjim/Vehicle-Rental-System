@@ -21,6 +21,18 @@ const updateUsers = async (
 };
 
 const deleteUsers = async (id: string) => {
+  const check = await pool.query(
+    `SELECT availability_status FROM Vehicles WHERE id=$1`,
+    [id]
+  );
+
+  if (check.rows.length === 0) {
+    throw new Error("Users not found");
+  }
+
+  if (check.rows[0].availability_status === "booking") {
+    throw new Error("Booked vehicles cannot be deleted");
+  }
   const result = await pool.query(`DELETE  FROM Users WHERE id=$1`, [id]);
   return result;
 };

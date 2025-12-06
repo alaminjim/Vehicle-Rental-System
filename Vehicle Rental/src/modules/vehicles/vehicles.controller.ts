@@ -45,7 +45,6 @@ const getSingleVehicles = async (req: Request, res: Response) => {
       return res.status(200).json({
         success: true,
         message: "No vehicles found",
-        data: [],
       });
     }
     res.status(200).json({
@@ -74,7 +73,6 @@ const updateVehicles = async (req: Request, res: Response) => {
       return res.status(200).json({
         success: true,
         message: "No vehicles found",
-        data: [],
       });
     }
     res.status(200).json({
@@ -97,13 +95,11 @@ const deleteVehicles = async (req: Request, res: Response) => {
       return res.status(200).json({
         success: true,
         message: "No vehicles found",
-        data: null,
       });
     }
     res.status(200).json({
       success: true,
       message: "Vehicle deleted successfully",
-      data: null,
     });
   } catch (error: any) {
     res.status(400).json({ success: false, message: error.message });

@@ -28,5 +28,17 @@ export const initDB = async () => {
     );
     `);
 
+  await pool.query(`
+      CREATE TABLE IF NOT EXISTS Bookings(
+      id SERIAL PRIMARY KEY,
+      user_id INT NOT NULL REFERENCES Users(id) ON DELETE CASCADE,
+      vehicle_id INT NOT NULL REFERENCES Vehicles(id) ON DELETE CASCADE,
+      rent_start_date DATE NOT NULL,
+      rent_end_date DATE NOT NULL,
+      total_price INT NOT NULL,
+      status VARCHAR(20) NOT NULL 
+       CHECK (status IN ('active', 'completed', 'cancelled'))
+      )`);
+
   console.log("Database connected");
 };

@@ -9,7 +9,6 @@ const getAllUsers = async (req: Request, res: Response) => {
       return res.status(200).json({
         success: true,
         message: "No users found",
-        data: null,
       });
     }
     res.status(200).json({
@@ -23,31 +22,47 @@ const getAllUsers = async (req: Request, res: Response) => {
 };
 
 const updateUsers = async (req: Request, res: Response) => {
-  const id = req.params.userId;
+  const userId = req.params.userId;
+  const loggedInUser = req.user;
+
   const { name, email, password, phone, role } = req.body;
+
   try {
+    if (loggedInUser.role === "customer") {
+      if (loggedInUser.id !== userId) {
+        return res.status(403).json({
+          success: false,
+          message: "You are not allowed to update another user's profile",
+        });
+      }
+
+      if (role) {
+        return res.status(403).json({
+          success: false,
+          message: "Customers cannot update their role",
+        });
+      }
+    }
+
     const result = await userService.updateUsers(
       name,
       email,
       password,
       phone,
       role,
-      id as string
+      userId as string
     );
-    if (result.rowCount === 0) {
-      return res.status(200).json({
-        success: true,
-        message: "No user found",
-        data: [],
-      });
-    }
+
     res.status(200).json({
       success: true,
-      message: "users update successfully",
-      data: result.rows,
+      message: "User updated successfully",
+      data: result.rows[0],
     });
   } catch (error: any) {
-    res.status(400).json({ success: false, message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -60,7 +75,6 @@ const deleteUser = async (req: Request, res: Response) => {
       return res.status(200).json({
         success: true,
         message: "No users found",
-        data: null,
       });
     }
     res.status(200).json({
