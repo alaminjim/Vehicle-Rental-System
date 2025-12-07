@@ -10,17 +10,17 @@ const signinUser = async (email: string, password: string) => {
   ]);
 
   if (result.rows.length === 0) {
-    throw new Error("User not Found");
+    return null;
   }
 
-  const user = await result.rows[0];
-  const isMatch = await bcrypt.compare(password, result.rows[0].password);
+  const user = result.rows[0];
+  const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new Error("User not found");
+    throw new Error("Invalid credentials");
   }
 
-  delete result.rows[0].password;
+  delete user.password;
 
   const token = jwt.sign(
     {
@@ -33,6 +33,8 @@ const signinUser = async (email: string, password: string) => {
     config.jwtSecret as string,
     { expiresIn: "7d" }
   );
+
+  console.log(user.role);
 
   return { token, user };
 };

@@ -118,13 +118,11 @@ const updateBooking = async (bookingId: number, user: any) => {
       throw new Error("Cannot cancel booking after start date");
     }
 
-    // Cancel booking
     const result = await pool.query(
       `UPDATE Bookings SET status='cancelled' WHERE id=$1 RETURNING *`,
       [bookingId]
     );
 
-    // Update vehicle availability
     await pool.query(
       `UPDATE Vehicles SET availability_status='available' WHERE id=$1`,
       [booking.vehicle_id]
@@ -132,13 +130,11 @@ const updateBooking = async (bookingId: number, user: any) => {
 
     return result.rows[0];
   } else if (user.role === "admin") {
-    // Admin marks as returned
     const result = await pool.query(
       `UPDATE Bookings SET status='returned' WHERE id=$1 RETURNING *`,
       [bookingId]
     );
 
-    // Update vehicle availability
     await pool.query(
       `UPDATE Vehicles SET availability_status='available' WHERE id=$1`,
       [booking.vehicle_id]

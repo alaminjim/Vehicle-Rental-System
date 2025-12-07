@@ -9,8 +9,8 @@ const signinUser = async (req: Request, res: Response) => {
       success: true,
       message: "Users Signin successFull",
       data: {
-        token: result.token,
-        user: result.user,
+        token: result?.token,
+        user: result?.user,
       },
     });
   } catch (error: any) {
