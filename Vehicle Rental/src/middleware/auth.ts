@@ -9,8 +9,8 @@ const auth = (...roles: string[]) => {
 
     if (!authHeader) {
       if (roles.length === 0) {
-        next(); // public route → no token required
-        return; // TypeScript এর জন্য explicit return
+        next();
+        return;
       }
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
