@@ -7,7 +7,7 @@ const auth = (...roles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
+    if (!authHeader || !authHeader.split(" ")[1]) {
       if (roles.length === 0) {
         next();
         return;
