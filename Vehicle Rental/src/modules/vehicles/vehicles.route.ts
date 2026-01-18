@@ -5,8 +5,8 @@ import auth from "../../middleware/auth";
 const routes = express.Router();
 
 routes.post("/", auth("admin"), vehiclesController.createVehicles);
-routes.get("/", auth(), vehiclesController.getVehicles);
-routes.get("/:vehicleId", auth(), vehiclesController.getSingleVehicles);
+routes.get("/", vehiclesController.getVehicles);
+routes.get("/:vehicleId", vehiclesController.getSingleVehicles);
 routes.put("/:vehicleId", auth("admin"), vehiclesController.updateVehicles);
 routes.delete("/:vehicleId", auth("admin"), vehiclesController.deleteVehicles);
 
