@@ -17,7 +17,7 @@ const createVehicles = async (payload: Record<string, unknown>) => {
       registration_number,
       daily_rent_price,
       availability_status,
-    ]
+    ],
   );
   return result;
 };
@@ -36,11 +36,11 @@ const updateVehicles = async (
   vehicle_name: string,
   daily_rent_price: number,
   availability_status: string,
-  id: string
+  id: string,
 ) => {
   const result = await pool.query(
     `UPDATE Vehicles SET vehicle_name=$1, daily_rent_price=$2, availability_status=$3 WHERE id=$4 RETURNING *`,
-    [vehicle_name, daily_rent_price, availability_status, id]
+    [vehicle_name, daily_rent_price, availability_status, id],
   );
   return result;
 };
@@ -48,7 +48,7 @@ const updateVehicles = async (
 const deleteVehicles = async (id: string) => {
   const check = await pool.query(
     `SELECT availability_status FROM Vehicles WHERE id=$1`,
-    [id]
+    [id],
   );
 
   if (check.rows.length === 0) {
@@ -61,7 +61,7 @@ const deleteVehicles = async (id: string) => {
 
   const result = await pool.query(
     `DELETE FROM Vehicles WHERE id=$1 RETURNING *`,
-    [id]
+    [id],
   );
 
   return result;
