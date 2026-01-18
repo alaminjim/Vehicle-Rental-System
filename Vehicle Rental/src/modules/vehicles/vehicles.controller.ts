@@ -16,9 +16,7 @@ const createVehicles = async (req: Request, res: Response) => {
 
 const getVehicles = async (req: Request, res: Response) => {
   try {
-    console.log("Fetching vehicles...");
     const result = await vehiclesServices.getVehicles();
-    console.log("Rows fetched:", result.rows.length);
 
     if (result.rows.length === 0) {
       return res.status(200).json({
