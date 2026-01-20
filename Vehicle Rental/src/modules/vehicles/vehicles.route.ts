@@ -4,9 +4,11 @@ import auth from "../../middleware/auth";
 
 const routes = express.Router();
 
+// public
 routes.get("/", vehiclesController.getVehicles);
 routes.get("/:vehicleId", vehiclesController.getSingleVehicles);
 
+// Auth
 routes.post("/", auth("admin"), vehiclesController.createVehicles);
 routes.put("/:vehicleId", auth("admin"), vehiclesController.updateVehicles);
 routes.delete("/:vehicleId", auth("admin"), vehiclesController.deleteVehicles);
