@@ -5,47 +5,25 @@ import config from "../config";
 
 const auth = (...roles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader) {
-      if (roles.length === 0) return next();
-      return res.status(401).json({ success: false, message: "Unauthorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
+      throw new Error("You are not authorized");
     }
-
-    try {
-      const decoded = jwt.verify(
-        token,
-        config.jwtSecret as string,
-      ) as JwtPayload;
-
-      const userResult = await pool.query(
-        `SELECT * FROM users WHERE email=$1`,
-        [decoded.email],
-      );
-
-      if (userResult.rows.length === 0) {
-        return res
-          .status(401)
-          .json({ success: false, message: "User not found" });
-      }
-
-      req.user = decoded;
-
-      if (roles.length && !roles.includes(decoded.role)) {
-        return res.status(403).json({ success: false, message: "Forbidden" });
-      }
-
-      next();
-    } catch (error) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Token expired or invalid" });
+    const decoded = jwt.verify(token, config.jwtSecret as string) as JwtPayload;
+    const user = await pool.query(
+      `
+      SELECT * FROM users WHERE email=$1
+      `,
+      [decoded.email],
+    );
+    if (user.rows.length === 0) {
+      throw new Error("User not found!");
     }
+    req.user = decoded;
+    if (roles.length && !roles.includes(decoded.role)) {
+      throw new Error("You are not authorized role");
+    }
+    next();
   };
 };
 
